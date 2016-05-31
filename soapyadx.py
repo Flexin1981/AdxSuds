@@ -1,7 +1,18 @@
 from suds.client import Client
+from suds.cache import ObjectCache
+from suds.bindings import binding
+from sslcontext import create_ssl_context, HTTPSTransport
+from base64 import encodestring
+import logging
+
+
+class MyCache(ObjectCache):
+    pass
 
 
 class AdxBase(object):
+
+    PREFIX = "https://"
 
     def __init__(self, parent):
         self.parent = parent
@@ -14,37 +25,59 @@ class AdxBase(object):
             Method to download the wsdl files from the device.
         :return:
         """
-        try:
-            self.wsdl = Client(
-                "http://{0}{1}".format(
-                    self.parent.host,
-                    WSDL
-                ),
+        self.b64_credentials = encodestring(
+            '%s:%s' % (
                 self.parent.username,
                 self.parent.password
             )
-        except Exception:
-            raise StandardError("Unable to read WSDL file from device")
+        ).replace('\n', '')
+
+        kwargs = dict()
+        kwargs['transport'] = HTTPSTransport(create_ssl_context(False))
+
+        self.wsdl = Client(
+            "https://{0}{1}".format(
+                self.parent.host,
+                self.WSDL
+            ),
+            **kwargs
+        )
+        self.wsdl.set_options(headers={"Authorization": "Basic %s" % self.b64_credentials})
+        self.wsdl.set_options(
+            location="{0}{1}{2}".format(
+                self.PREFIX,
+                self.parent.host,
+                self.LOCATION
+            )
+        )
+        self.wsdl.set_options(cache=MyCache())
+        # except Exception:
+        #     raise StandardError("Unable to read WSDL file from device")
 
 
 class SysService(AdxBase):
-    WSDL = "wsdl/sys_service.wsdl"
+    WSDL = "/wsdl/sys_service.wsdl"
+    LOCATION = "/WS/SYS"
 
 
-class Networkservice(AdxBase):
-    WSDL = "wsdl/network_service.wsdl"
+class NetworkService(AdxBase):
+    WSDL = "/wsdl/network_service.wsdl"
+    LOCATION = "/WS/NET"
 
 
 class SlbService(AdxBase):
-    WDSL = "wsdl/slb_service.wsdl"
+    WSDL = "/wsdl/slb_service.wsdl"
+    LOCATION = "/WS/SLB"
 
 
 class SecurityService(AdxBase):
-    WDSL = "wsdl/security_service.wsdl"
+    WSDL = "/wsdl/security_service.wsdl"
+    LOCATION = "/WS/SEC"
 
 
 class GslbService(AdxBase):
-    WDSL = "wsdl/gslb_service.wsdl"
+    WSDL = "/wsdl/gslb_service.wsdl"
+    LOCATION = "/WS/GLB"
 
 
 class Adx(object):
@@ -67,12 +100,7 @@ class Adx(object):
         self.port = port
 
         self.sys_service = SysService(self)
-        self.network_service = Networkservice(self)
+        self.network_service = NetworkService(self)
         self.slb_service = SlbService(self)
         self.security_service = SecurityService(self)
         self.gslb_service = GslbService(self)
-
-
-if __name__ == '__main__':
-    adx = Adx("", "", "")
-
