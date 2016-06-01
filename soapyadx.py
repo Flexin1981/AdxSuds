@@ -1,6 +1,6 @@
 from suds.client import Client
 from suds.cache import ObjectCache
-from suds.bindings import binding
+from suds.plugin import MessagePlugin
 from sslcontext import create_ssl_context, HTTPSTransport
 from base64 import encodestring
 import logging
@@ -10,6 +10,25 @@ class MyCache(ObjectCache):
     pass
 
 
+class EnvelopeFixer(MessagePlugin):
+    """
+        This is a patch to reset the body of the soap packet to the correct namespace (same as the header)
+    """
+
+    def marshalled(self, context):
+        """
+            Method that catches all soap packets before they get sent and changes the envelope
+            body to match the header.
+        :param context:
+        :return:
+        """
+        root = context.envelope.getRoot()
+        envelope = root.getChild("Envelope")
+        children = envelope.getChildren()
+        children[1].setPrefix(children[0].prefix)
+        return context
+
+
 class AdxBase(object):
 
     PREFIX = "https://"
@@ -17,6 +36,7 @@ class AdxBase(object):
     def __init__(self, parent):
         self.parent = parent
         self.wsdl = None
+        self.b64_credentials = None
 
         self.get_namespace()
 
@@ -40,6 +60,7 @@ class AdxBase(object):
                 self.parent.host,
                 self.WSDL
             ),
+            plugins=[EnvelopeFixer()],
             **kwargs
         )
         self.wsdl.set_options(headers={"Authorization": "Basic %s" % self.b64_credentials})
@@ -104,3 +125,4 @@ class Adx(object):
         self.slb_service = SlbService(self)
         self.security_service = SecurityService(self)
         self.gslb_service = GslbService(self)
+
