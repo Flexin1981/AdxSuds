@@ -14,7 +14,7 @@ This will show you a list of the available methods and the input structures and 
 
 <h4>Importing</h4>
 
-     import sopayadx
+     import soapyadx
 
 <h4>Simple Methods</h4>
 
