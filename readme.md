@@ -30,7 +30,7 @@ Currently this is tested on linux but should work on windows but will require a 
 
      adx.slb_service.wsdl.service.getAllVirtualServers()
      
-<h4>Simplple inputs</h4>
+<h4>Simple inputs</h4>
 
      adx = Adx(<host/ip>, username, password)
      
