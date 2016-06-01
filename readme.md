@@ -18,8 +18,8 @@ This will show you a list of the available methods and the input structures and 
 
      adx.slb_service.wsdl.service.getAllVirtualServers()
      
-<h4>Simplple inputs</>
-     
+<h4>Simplple inputs</h4>
+
      adx = Adx(<host/ip>, username, password)
      
      adx.slb_service.wsdl.service.getTacacsServersConfiguration("input")
