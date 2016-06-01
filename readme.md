@@ -12,6 +12,10 @@ This will show you a list of the available methods and the input structures and 
 
 <h3>Usage</h3>
 
+<h4>Importing</h4>
+
+     import sopayadx
+
 <h4>Simple Methods</h4>
 
      adx = Adx(<host/ip>, username, password)
