@@ -34,7 +34,7 @@ Currently this is tested on linux but should work on windows but will require a 
 
      adx = Adx(<host/ip>, username, password)
      
-     adx.slb_service.wsdl.service.getTacacsServersConfiguration("input")
+     adx.sys_service.wsdl.service.getTacacsServersConfiguration("<IP Address>")
 
 <h4>Complex objects inputs</h4>
 
