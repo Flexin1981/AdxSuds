@@ -10,6 +10,12 @@ The Adx programmers guide can be found @
 
 This will show you a list of the available methods and the input structures and output structures of the methods.
 
+<h3>Installation</h3>
+
+You can install this module through pip with the following Currently this is tested on linux but should work on windows but will require a tweak for the cache file location.
+
+     sudo pip install git+https://github.com/Flexin1981/AdxSuds
+
 <h3>Usage</h3>
 
 <h4>Importing</h4>
