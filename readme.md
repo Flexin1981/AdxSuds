@@ -12,9 +12,11 @@ This will show you a list of the available methods and the input structures and 
 
 <h3>Installation</h3>
 
-You can install this module through pip with the following Currently this is tested on linux but should work on windows but will require a tweak for the cache file location.
+You can install this module through pip with the following Command; 
 
      sudo pip install git+https://github.com/Flexin1981/AdxSuds
+     
+Currently this is tested on linux but should work on windows but will require a tweak for the cache file location.
 
 <h3>Usage</h3>
 
