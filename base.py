@@ -31,6 +31,24 @@ class AdxBase(object):
 
         self.get_namespace()
 
+    def set_cache(self):
+        """
+            Method to set the cache file on and off.
+        :return:
+        """
+        if self.cache:
+            self.wsdl.set_options(cache=MyCache())
+        else:
+            self.wsdl.set_options(cache=None)
+
+    def set_cache_location(self, location):
+        """
+            Method to allow the cache location to be changed.
+        :return:
+        """
+        cache = self.wsdl.options.cache
+        cache.setlocation = location
+
     def get_namespace(self):
 
         """
@@ -71,7 +89,8 @@ class AdxBase(object):
                 self.LOCATION
             )
         )
-        self.wsdl.set_options(cache=MyCache())
+
+        self.set_cache()
 
     def __getattr__(self, item):
         """
