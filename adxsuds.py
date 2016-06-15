@@ -20,7 +20,7 @@ class Adx(object):
         "gslb": GslbService
     }
 
-    def __init__(self, host, username, password, port=443, protocol="https", verify_ssl=True, debug=0):
+    def __init__(self, host, username, password, port=443, protocol="https", verify_ssl=True, debug=0, cache=True):
         """
             Class Constructor.
         """
@@ -31,6 +31,7 @@ class Adx(object):
         self.PREFIX = protocol + "://"
         self.SSL_VERIFY = verify_ssl
         self.debug = debug
+        self.cache = cache
 
     def __getattr__(self, item):
         """
