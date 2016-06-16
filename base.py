@@ -24,6 +24,7 @@ class AdxBase(object):
         self.wsdl = None
         self.b64_credentials = None
         self.PREFIX = self.parent.PREFIX
+        self.cache = self.parent.cache
 
         # This is a patch to not verify the certificate and is discouraged in the documentation.
         if (not self.parent.SSL_VERIFY) and (self.PREFIX is not "http://"):
