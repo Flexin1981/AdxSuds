@@ -45,10 +45,3 @@ class Adx(object):
         :return:
         """
         pprint.pprint(self.NAMESPACES.keys())
-
-
-if __name__ == '__main__':
-
-    adx = Adx("192.168.100.254", "john", "john", verify_ssl=False, debug=2)
-    adx.security.getAllSslCertificateFilenames()
-
