@@ -30,7 +30,7 @@ class AdxBase(object):
         if (not self.parent.SSL_VERIFY) and (self.PREFIX is not "http://"):
             ssl._create_default_https_context = ssl._create_unverified_context
 
-        self.get_namespace()
+        # self.get_namespace()
 
     def set_cache(self):
         """
@@ -93,7 +93,7 @@ class AdxBase(object):
 
         self.set_cache()
 
-    def __getattr__(self, item):
+    def __getattr__(self, item, recursuion=False):
         """
             This is a shortcut to the 'wsdl.service' namespace to remove the need to call this.
             It also makes the module easier to read.
@@ -104,11 +104,14 @@ class AdxBase(object):
         """
         try:
             # This is the shortcut for the methods on the device.
-            if hasattr(self.wsdl.service, item):
+            try:
                 return getattr(self.wsdl.service, item)
-            elif self.__dict__[item]:
+            except AttributeError:
                 return self.__dict__[item]
 
+        except (KeyError, AttributeError):
+            self.get_namespace()
+            return getattr(self.wsdl.service, item)
         except KeyError:
             raise AttributeError("Method {0} not recognised".format(item))
 

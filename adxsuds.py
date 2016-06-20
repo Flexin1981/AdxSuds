@@ -33,19 +33,11 @@ class Adx(object):
         self.debug = debug
         self.cache = cache
 
-    def __getattr__(self, item):
-        """
-            Method to build the namespaces from the WSDL file upon first request.
-        :param item:
-        :return:
-        """
-        if hasattr(self, item):
-            return self.__dict__[item]
+        self._build_namespaces()
 
-        if item in self.NAMESPACES.keys():
-            self.__setattr__(item, self.NAMESPACES[item](self))
-        else:
-            raise AttributeError()
+    def _build_namespaces(self):
+        for key, val in self.NAMESPACES.iteritems():
+            self.__setattr__(key, val(self))
 
     def get_namespaces(self):
         """
@@ -53,3 +45,10 @@ class Adx(object):
         :return:
         """
         pprint.pprint(self.NAMESPACES.keys())
+
+
+if __name__ == '__main__':
+
+    adx = Adx("192.168.100.254", "john", "john", verify_ssl=False, debug=2)
+    adx.security.getAllSslCertificateFilenames()
+
