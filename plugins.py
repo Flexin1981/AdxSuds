@@ -29,10 +29,7 @@ class EnvelopeFixer(MessagePlugin):
         return context
 
     def unmarshalled(self, context):
-        if self.debug >= 1:
-            print "====================Begin Received Packet======================"
-            print context.envelope
-            print "=====================End Received Packet======================="
+        pass
 
     def received(self, context):
         if self.debug >= 2:
