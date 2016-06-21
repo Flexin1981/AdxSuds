@@ -1,3 +1,5 @@
+import suds
+from suds.bindings.binding import WebFault
 from suds.xsd.doctor import Import, ImportDoctor
 from suds.transport.http import HttpAuthenticated as HttpAuthenticated
 from suds.transport.https import HttpAuthenticated as HttpsAuthenticated
@@ -7,6 +9,23 @@ from suds.client import Client
 from plugins import EnvelopeFixer
 from suds.cache import ObjectCache
 import re
+
+
+def detect_fault(self, body):
+    """
+        Overriding the default suds error handing.
+    """
+    fault = body.getChild('Fault', suds.bindings.binding.envns)
+    if fault is None:
+        return
+    unmarshaller = self.unmarshaller(False)
+    p = unmarshaller.process(fault)
+    if self.options().faults:
+        raise type(str(p.detail.RuntimeFault.faultId), (Exception,), {})(str(p.faultcode) + " " + str(p.faultstring))
+    return self
+
+# This is a hack to get suds to allow us to raise custom faults.
+suds.bindings.binding.Binding.detect_fault = detect_fault
 
 
 class MyCache(ObjectCache):
